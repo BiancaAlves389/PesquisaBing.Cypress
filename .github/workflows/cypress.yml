@@ -9,16 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Baixa o código do repositório
       - uses: actions/checkout@v4
 
+      # 2. Configura Node.js
       - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
 
-      - run: npm install
+      # 3. Instala dependências de forma limpa (IMPORTANTE)
+      - run: npm ci
 
+      # 4. Limpa cache do Cypress (evita erro antigo tipo /aceitar/i)
+      - run: npx cypress cache clear
+
+      # 5. Reinstala Cypress corretamente
       - run: npx cypress install
+
+      # 6. Confirma instalação
       - run: npx cypress verify
 
+      # 7. Roda os testes
       - run: npx cypress run
