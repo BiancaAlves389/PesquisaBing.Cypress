@@ -1,41 +1,42 @@
 # Disparo manual a partir de 1 clique
-# nome do nosso 'pipeline'
-name: 'Execução Manual'
-# regras de disparo (gatilhos/triggers)
-# gatilho de exec manual = workflow_dispatch
+
+name: Execução Manual
+
 on:
   workflow_dispatch:
-# trabalhos/tarefas dentro do pipeline = jobs
+
 jobs:
   e2e-tests:
-    #maquina que o job vai executar
+
     runs-on: ubuntu-latest
-    # passos do script de build
+
     steps:
-      # clone do projeto
-      - uses: actions/checkout@v4
-      # instalação do node
-      - uses: actions/setup-node@v4
+
+      # Clonar projeto
+      - name: Clonar projeto
+        uses: actions/checkout@v4
+
+      # Instalar Node
+      - name: Instalar Node
+        uses: actions/setup-node@v4
         with:
-          node-version: latest
-      # instalação do Yarn
-      - name: Instalando Yarn
-        run: npm install -g yarn
+          node-version: 20
 
-      # instalação das dependências
-      - name: Instalando dependências
-        run: yarn
+      # Instalar dependências
+      - name: Instalar dependências
+        run: npm install
 
-      # instalação do Cypress
-      - name: Instalando Cypress
+      # Instalar Cypress
+      - name: Instalar Cypress
         run: npx cypress install
 
-      # executar os testes e2e
-      - name: Executando Testes E2E
+      # Rodar testes
+      - name: Executar testes E2E
         run: npx cypress run
-       - name: Upload screenshots
-        uses: actions/upload-artifact@v4
 
+      # Upload screenshots
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots
           path: cypress/screenshots
