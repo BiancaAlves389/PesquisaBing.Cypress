@@ -8,12 +8,11 @@ describe('Pesquisa no Bing', () => {
 
     cy.get('body', { timeout: 10000 }).should('be.visible');
 
-    cy.get('body').then(($body) => {
-      if ($body.text().match(/aceitar|accept/i)) {
-        cy.contains(/aceitar|accept/i, { timeout: 5000 })
-          .click({ force: true });
-      }
-    });
+ cy.get('body').then(($body) => {
+  if ($body.text().match(/aceitar|accept/i)) {
+    cy.contains(/aceitar|accept/i).click()
+  }
+})
 
     cy.get('#sb_form_q')
       .should('be.visible')
