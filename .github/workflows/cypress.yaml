@@ -1,34 +1,35 @@
-name: Cypress Tests
-
+# Disparo manual a partir de 1 clique
+# nome do nosso 'pipeline'
+name: 'Execução Manual'
+# regras de disparo (gatilhos/triggers)
+# gatilho de exec manual = workflow_dispatch
 on:
-  push:
-    branches: [main]
-
+  workflow_dispatch:
+# trabalhos/tarefas dentro do pipeline = jobs
 jobs:
-  cypress-run:
+  e2e-tests:
+    #maquina que o job vai executar
     runs-on: ubuntu-latest
-
+    # passos do script de build
     steps:
-      # 1. Baixa o código do repositório
+      # clone do projeto
       - uses: actions/checkout@v4
-
-      # 2. Configura Node.js
+      # instalação do node
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'
+          node-version: latest
+      # instalação do Yarn
+      - name: Instalando Yarn
+        run: npm install -g yarn
 
-      # 3. Instala dependências de forma limpa (IMPORTANTE)
-      - run: npm ci
+      # instalação das dependências
+      - name: Instalando dependências
+        run: yarn
 
-      # 4. Limpa cache do Cypress (evita erro antigo tipo /aceitar/i)
-      - run: npx cypress cache clear
+      # instalação do Cypress
+      - name: Instalando Cypress
+        run: npx cypress install
 
-      # 5. Reinstala Cypress corretamente
-      - run: npx cypress install
-
-      # 6. Confirma instalação
-      - run: npx cypress verify
-
-      # 7. Roda os testes
-      - run: npx cypress run
+      # executar os testes e2e
+      - name: Executando Testes E2E
+        run: npx cypress run
