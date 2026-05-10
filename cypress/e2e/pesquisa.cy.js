@@ -1,44 +1,27 @@
-describe('Pesquisa no Bing', () => {
+describe('Pesquisa no DuckDuckGo', () => {
 
   it('Fazer pesquisa', () => {
 
-    // Ignora erros inesperados da página
+    // Ignora erros da página
     cy.on('uncaught:exception', () => false);
 
-    // Abre o Bing
-    cy.visit('https://www.bing.com');
+    // Abre o site
+    cy.visit('https://duckduckgo.com/');
 
-    // Espera a página carregar
-    cy.get('body', { timeout: 15000 }).should('be.visible');
-
-    // Verifica se existe popup de cookies
-    cy.get('body').then(($body) => {
-
-      const botao = $body.find(
-        'button:contains("Aceitar"), button:contains("Accept")'
-      );
-
-      // Se encontrar o botão, clica
-      if (botao.length > 0) {
-        cy.wrap(botao[0]).click({ force: true });
-      }
-
-    });
-
-    // Espera o campo de pesquisa aparecer
+    // Espera o campo de pesquisa carregar
     cy.get('input[name="q"]', { timeout: 15000 })
       .should('be.visible')
       .type('Livros JAVA{enter}');
 
-    // Espera a URL mudar após a pesquisa
+    // Verifica se a URL mudou após a pesquisa
     cy.url({ timeout: 15000 })
-      .should('include', 'search');
+      .should('include', 'q=Livros+JAVA');
 
-    // Verifica se apareceu algum resultado na página
+    // Verifica se existe resultado na página
     cy.get('body')
       .should('contain.text', 'JAVA');
 
-    // Screenshot final
+    // Tira print
     cy.screenshot();
 
   });
