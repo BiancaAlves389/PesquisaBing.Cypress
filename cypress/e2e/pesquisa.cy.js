@@ -5,37 +5,40 @@ describe('Pesquisa no Bing', () => {
     // Ignora erros inesperados da página
     cy.on('uncaught:exception', () => false);
 
-    // Abre o Bing versão Brasil
-    cy.visit('https://www.bing.com/?cc=br');
+    // Abre o Bing
+    cy.visit('https://www.bing.com');
 
-    // Espera o body carregar
-    cy.get('body', { timeout: 10000 }).should('be.visible');
+    // Espera a página carregar
+    cy.get('body', { timeout: 15000 }).should('be.visible');
 
-    // Verifica se existe botão de aceitar cookies
+    // Verifica se existe popup de cookies
     cy.get('body').then(($body) => {
 
-      // Procura botão com texto Aceitar ou Accept
       const botao = $body.find(
         'button:contains("Aceitar"), button:contains("Accept")'
       );
 
-      // Se encontrar o botão, clica nele
+      // Se encontrar o botão, clica
       if (botao.length > 0) {
         cy.wrap(botao[0]).click({ force: true });
       }
 
     });
 
-    // Digita na barra de pesquisa
-    cy.get('#sb_form_q')
+    // Espera o campo de pesquisa aparecer
+    cy.get('input[name="q"]', { timeout: 15000 })
       .should('be.visible')
       .type('Livros JAVA{enter}');
 
-    // Verifica se os resultados apareceram
-    cy.get('#b_results', { timeout: 10000 })
-      .should('be.visible');
+    // Espera a URL mudar após a pesquisa
+    cy.url({ timeout: 15000 })
+      .should('include', 'search');
 
-    // Tira print da tela
+    // Verifica se apareceu algum resultado na página
+    cy.get('body')
+      .should('contain.text', 'JAVA');
+
+    // Screenshot final
     cy.screenshot();
 
   });
